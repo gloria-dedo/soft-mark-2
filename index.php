@@ -10,13 +10,12 @@ require_once 'includes/header.php';
 <section class="hero product-finder-hero" id="hero">
     <div class="container hero-finder-inner animate-up">
         <div class="hero-copy">
-            <p class="section-eyebrow">SoftMark ERP Store</p>
-            <h1>Business web systems for every workflow</h1>
-            <p>Find and purchase ready-to-use ERP modules for accounting, HR, inventory, CRM, procurement, projects, support, and more.</p>
+            <h1>ERP systems for growing businesses</h1>
+            <p>Browse practical web-based modules for finance, people, stock, sales, purchasing, projects, and daily operations.</p>
 
             <label class="hero-search" for="home-product-search">
                 <i class="fas fa-search"></i>
-                <input type="search" id="home-product-search" placeholder="Search ERP products..." autocomplete="off">
+                <input type="search" id="home-product-search" placeholder="Search systems..." autocomplete="off">
             </label>
         </div>
 
@@ -41,7 +40,7 @@ require_once 'includes/header.php';
     <div class="container">
         <div class="home-filter-bar" aria-label="Filter products by web system type">
             <button class="home-filter-chip active" type="button" data-filter="all">
-                <i class="far fa-star"></i> Discover
+                All
             </button>
             <button class="home-filter-chip" type="button" data-filter="accounting">Accounting</button>
             <button class="home-filter-chip" type="button" data-filter="hr">HR &amp; Payroll</button>
@@ -50,16 +49,22 @@ require_once 'includes/header.php';
             <button class="home-filter-chip" type="button" data-filter="procurement">Procurement</button>
             <button class="home-filter-chip" type="button" data-filter="project">Projects</button>
             <button class="home-filter-chip" type="button" data-filter="support">Support</button>
-            <a href="products.php" class="home-filter-link">View all <i class="fas fa-arrow-right"></i></a>
+            <label class="home-filter-select-wrap" for="home-system-filter">
+                <span>View</span>
+                <select id="home-system-filter" class="home-filter-select" aria-label="View products by system type">
+                    <option value="all">All</option>
+                    <option value="accounting">Accounting</option>
+                    <option value="hr">HR &amp; Payroll</option>
+                    <option value="inventory">Inventory</option>
+                    <option value="crm">CRM</option>
+                    <option value="procurement">Procurement</option>
+                    <option value="project">Projects</option>
+                    <option value="support">Support</option>
+                </select>
+            </label>
         </div>
 
-        <div class="home-products-heading">
-            <div>
-                <p class="section-eyebrow">Available Systems</p>
-                <h2>Choose a product and add it to cart.</h2>
-            </div>
-            <p id="home-product-count"><?= count($featuredProducts) ?> products available</p>
-        </div>
+       
 
         <div class="product-grid home-product-grid" id="home-product-grid">
             <?php foreach ($featuredProducts as $product): ?>

@@ -28,6 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const homeSearch = document.getElementById('home-product-search');
     const homeCards = Array.from(document.querySelectorAll('#home-product-grid .product-card'));
     const homeFilterButtons = Array.from(document.querySelectorAll('.home-filter-chip'));
+    const homeSystemSelect = document.getElementById('home-system-filter');
     const homeCount = document.getElementById('home-product-count');
     const homeEmpty = document.getElementById('home-empty-state');
     let activeHomeFilter = 'all';
@@ -61,9 +62,18 @@ document.addEventListener('DOMContentLoaded', () => {
         button.addEventListener('click', () => {
             activeHomeFilter = button.dataset.filter || 'all';
             homeFilterButtons.forEach(btn => btn.classList.toggle('active', btn === button));
+            if (homeSystemSelect) homeSystemSelect.value = activeHomeFilter;
             filterHomeProducts();
         });
     });
+
+    if (homeSystemSelect) {
+        homeSystemSelect.addEventListener('change', () => {
+            activeHomeFilter = homeSystemSelect.value || 'all';
+            homeFilterButtons.forEach(btn => btn.classList.toggle('active', (btn.dataset.filter || 'all') === activeHomeFilter));
+            filterHomeProducts();
+        });
+    }
 
     if (homeSearch) {
         homeSearch.addEventListener('input', filterHomeProducts);
