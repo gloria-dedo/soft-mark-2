@@ -1,10 +1,13 @@
 <?php
 // includes/db.php
 
-$dbPath = __DIR__ . '/../database/erp_store.sqlite';
+$host = '127.0.0.1';
+$dbname = 'erp_store';
+$username = 'root';
+$password = ''; // Default XAMPP MySQL password is empty
 
 try {
-    $db = new PDO("sqlite:" . $dbPath);
+    $db = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8mb4", $username, $password);
     // Set errormode to exceptions
     $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     // Use default fetch mode associative array
