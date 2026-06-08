@@ -23,59 +23,83 @@ $currentPage = basename($_SERVER['PHP_SELF'], '.php');
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="/sotfMark/assets/css/style.css">
 </head>
 <body>
-    <!-- Top announcement bar -->
-    <div class="top-bar">
-        <div class="container">
-            <span><i class="fas fa-headset"></i> &nbsp;Expert Support: Mon–Fri, 8am–6pm</span>
-            <span><i class="fas fa-shield-halved"></i> &nbsp;30-Day Money Back Guarantee</span>
-            <span><i class="fas fa-phone"></i> &nbsp;+1 (800) 789-0000</span>
-        </div>
-    </div>
 
-    <!-- Main Navbar -->
-    <nav class="navbar" id="main-navbar">
-        <div class="container nav-inner">
+    <!-- Store Header / Navbar -->
+    <header class="store-header" id="store-header">
+        <div class="store-header-inner container">
+
             <!-- Logo -->
-            <a href="index.php" class="logo" id="nav-logo">
-                <img src="assets/images/logo.png" alt="SoftMark Logo" style="height: 48px; width: auto; display: block;">
+            <a href="index.php" class="store-logo">
+                <img src="/sotfMark/assets/images/logo.png" alt="SoftMark Logo">
             </a>
 
-            <!-- Nav Links -->
-            <ul class="nav-links" id="nav-links">
-                <li><a href="index.php" class="nav-link <?= $currentPage === 'index' ? 'active' : '' ?>">Home</a></li>
-                <li><a href="products.php" class="nav-link <?= $currentPage === 'products' ? 'active' : '' ?>">Products</a></li>
-                <li><a href="contact.php" class="nav-link <?= $currentPage === 'contact' ? 'active' : '' ?>">Contact Us</a></li>
+            <!-- Categories button — desktop only -->
+            <button class="store-category-btn">
+                <i class="fas fa-th-large"></i>
+                <span>Categories</span>
+                <i class="fas fa-chevron-down"></i>
+            </button>
+
+            <!-- Search bar -->
+            <form class="store-search" id="store-search-form" action="products.php" method="GET">
+                <input type="text" name="search" placeholder="Search products..." id="store-search-input">
+                <button type="submit" aria-label="Search">
+                    <i class="fas fa-search"></i>
+                </button>
+                <!-- Close search — mobile only -->
+                <button type="button" class="store-search-close" id="store-search-close" aria-label="Close search">
+                    <i class="fas fa-times"></i>
+                </button>
+            </form>
+
+            <!-- Nav links — desktop only -->
+            <ul class="store-nav">
+                <li><a href="index.php" class="<?= $currentPage === 'index' ? 'active' : '' ?>">Home</a></li>
+                <li><a href="products.php" class="<?= $currentPage === 'products' ? 'active' : '' ?>">Products</a></li>
+                <li><a href="contact.php" class="<?= $currentPage === 'contact' ? 'active' : '' ?>">Contact Us</a></li>
             </ul>
 
-            <!-- Nav Icons -->
-            <div class="nav-icons-group">
-                <a href="wishlist.php" class="nav-icon-link" id="nav-wishlist" title="Wishlist">
-                    <i class="fas fa-heart"></i>
+            <!-- Action icons + mobile controls -->
+            <div class="store-actions">
+                <!-- Search icon — mobile only, opens search bar -->
+                <button class="store-icon store-search-toggle" id="store-search-toggle" aria-label="Search" title="Search">
+                    <i class="fas fa-search"></i>
+                </button>
+
+                <a href="wishlist.php" class="store-icon" title="Wishlist">
+                    <i class="far fa-heart"></i>
                     <?php if ($wishlistCount > 0): ?>
-                        <span class="badge badge-red"><?= $wishlistCount ?></span>
+                        <span class="store-badge"><?= $wishlistCount ?></span>
                     <?php endif; ?>
                 </a>
-                <a href="cart.php" class="nav-icon-link" id="nav-cart" title="Cart">
-                    <i class="fas fa-shopping-cart"></i>
+
+                <a href="cart.php" class="store-icon" title="Cart">
+                    <i class="fas fa-shopping-bag"></i>
                     <?php if ($cartCount > 0): ?>
-                        <span class="badge badge-blue"><?= $cartCount ?></span>
+                        <span class="store-badge"><?= $cartCount ?></span>
                     <?php endif; ?>
                 </a>
-                <!-- Mobile hamburger -->
-                <button class="hamburger" id="hamburger-btn" aria-label="Toggle menu">
-                    <span></span><span></span><span></span>
+
+                <!-- Hamburger — mobile only -->
+                <button class="store-hamburger" id="store-hamburger" aria-label="Toggle menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
                 </button>
             </div>
+
         </div>
+
         <!-- Mobile nav drawer -->
-        <div class="mobile-nav" id="mobile-nav">
+        <nav class="store-mobile-nav" id="store-mobile-nav" aria-label="Mobile navigation">
             <ul>
-                <li><a href="index.php">Home</a></li>
-                <li><a href="products.php">Products</a></li>
-                <li><a href="contact.php">Contact Us</a></li>
+                <li><a href="index.php" class="<?= $currentPage === 'index' ? 'active' : '' ?>">Home</a></li>
+                <li><a href="products.php" class="<?= $currentPage === 'products' ? 'active' : '' ?>">Products</a></li>
+                <li><a href="contact.php" class="<?= $currentPage === 'contact' ? 'active' : '' ?>">Contact Us</a></li>
             </ul>
-        </div>
-    </nav>
+        </nav>
+
+    </header>

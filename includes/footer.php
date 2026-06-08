@@ -47,6 +47,6 @@
         </div>
     </footer>
 
-    <script src="assets/js/script.js"></script>
+    <script src="/sotfMark/assets/js/script.js"></script>
 </body>
 </html>

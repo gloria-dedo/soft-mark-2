@@ -23,6 +23,302 @@
     --radius:          8px; /* little radius */
 }
 
+/* ===================================
+   LAYOUT
+=================================== */
+/* NOTE: .container is also defined below in UTILITIES — consolidated here */
+
+/* ===================================
+   MARKETPLACE HEADER
+=================================== */
+
+.store-header {
+    position: sticky;
+    top: 0;
+    z-index: 999;
+    background: var(--white);
+    border-bottom: 2px solid transparent;
+    transition: border-color .3s ease;
+}
+
+.store-header.scrolled {
+    border-bottom-color: #e2e8f0;
+}
+
+.store-header-inner {
+    height: 90px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    position: relative;
+}
+
+.store-logo img {
+    height: 50px;
+    width: auto;
+    flex-shrink: 0;
+}
+
+.store-category-btn {
+    height: 56px;
+    padding: 0 22px;
+    border: none;
+    background: var(--accent-blue);
+    color: var(--white);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 700;
+    cursor: pointer;
+    border-radius: var(--radius);
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.store-search {
+    flex: 1;
+    height: 56px;
+    display: flex;
+    border: 1px solid var(--border);
+    background: var(--white);
+    border-radius: var(--radius);
+    overflow: hidden;
+    min-width: 0;
+}
+
+.store-search input {
+    flex: 1;
+    border: none;
+    outline: none;
+    padding: 0 18px;
+    font-size: 15px;
+    background: transparent;
+    min-width: 0;
+}
+
+.store-search button {
+    width: 60px;
+    border: none;
+    background: transparent;
+    border-left: 1px solid var(--border);
+    cursor: pointer;
+    color: var(--text-mid);
+    font-size: 15px;
+    flex-shrink: 0;
+}
+
+.store-search button[type="submit"]:hover {
+    background: var(--accent-blue);
+    color: var(--white);
+}
+
+/* Close search — hidden on desktop */
+.store-search-close {
+    display: none;
+}
+
+/* Search toggle icon — hidden on desktop, shown via media query */
+.store-search-toggle {
+    display: none;
+}
+
+.store-nav {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    flex-shrink: 0;
+}
+
+.store-nav a {
+    font-weight: 600;
+    color: var(--text-mid);
+    text-decoration: none;
+    transition: color .2s;
+    white-space: nowrap;
+}
+
+.store-nav a:hover,
+.store-nav a.active {
+    color: var(--accent-blue);
+}
+
+.store-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+}
+
+.store-icon {
+    width: 42px;
+    height: 42px;
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    color: var(--text-mid);
+    text-decoration: none;
+    transition: .2s;
+    border-radius: var(--radius);
+}
+
+.store-icon:hover {
+    background: var(--accent-blue);
+    color: var(--white);
+    border-color: var(--accent-blue);
+}
+
+.store-badge {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    min-width: 18px;
+    height: 18px;
+    border-radius: 999px;
+    background: var(--accent-red);
+    color: white;
+    font-size: 11px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 4px;
+}
+
+/* Hamburger button */
+.store-hamburger {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    width: 38px;
+    height: 38px;
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    cursor: pointer;
+    padding: 8px;
+    flex-shrink: 0;
+}
+
+.store-hamburger span {
+    display: block;
+    height: 2px;
+    background: var(--text-dark);
+    border-radius: 2px;
+    transition: .3s;
+}
+
+.store-hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.store-hamburger.open span:nth-child(2) { opacity: 0; }
+.store-hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+/* Mobile nav drawer */
+.store-mobile-nav {
+    display: none;
+    background: var(--white);
+    border-top: 1px solid var(--border);
+    padding: 8px 0 16px;
+}
+
+.store-mobile-nav.open {
+    display: block;
+}
+
+.store-mobile-nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.store-mobile-nav li {
+    border-bottom: 1px solid var(--border);
+}
+
+.store-mobile-nav a {
+    display: block;
+    padding: 14px 24px;
+    font-weight: 600;
+    font-size: .95rem;
+    color: var(--text-mid);
+    text-decoration: none;
+    transition: color .2s;
+}
+
+.store-mobile-nav a:hover,
+.store-mobile-nav a.active {
+    color: var(--accent-blue);
+}
+
+/* ---- Tablet (≤1024px): hide categories + nav, show hamburger + search toggle ---- */
+@media (max-width: 1024px) {
+    .store-category-btn { display: none; }
+    .store-nav { display: none; }
+    .store-hamburger { display: flex; }
+    .store-search-toggle { display: flex; }
+    /* Hide inline search — accessed via toggle */
+    .store-search { display: none; }
+    /* Show it when toggled open */
+    .store-header.search-open .store-search { display: flex; }
+}
+
+/* ---- Mobile (≤640px): search expands full-width on toggle ---- */
+@media (max-width: 640px) {
+    .store-header-inner {
+        height: 68px;
+        gap: 8px;
+    }
+
+    .store-logo img { height: 38px; }
+
+    /* Hide search bar by default; sits absolutely to cover the header */
+    .store-search {
+        display: none;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 68px;
+        z-index: 10;
+        border-radius: 0;
+        border: none;
+        border-bottom: 2px solid var(--accent-blue);
+        flex: none;
+        width: 100%;
+    }
+
+    /* Show search when header has .search-open */
+    .store-header.search-open .store-search {
+        display: flex;
+    }
+
+    /* Show the close button inside the search bar on mobile */
+    .store-header.search-open .store-search-close {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 52px;
+        border: none;
+        background: transparent;
+        border-left: 1px solid var(--border);
+        cursor: pointer;
+        color: var(--text-mid);
+        font-size: 16px;
+        flex-shrink: 0;
+    }
+
+    /* Hide logo + actions behind the expanded search */
+    .store-header.search-open .store-logo,
+    .store-header.search-open .store-actions {
+        visibility: hidden;
+        pointer-events: none;
+    }
+}
+
 /* ============================
    ANIMATIONS
 ============================== */
@@ -56,9 +352,11 @@ h1,h2,h3,h4,h5 { font-weight: 800; letter-spacing: -.02em; line-height: 1.15; co
    UTILITIES
 ============================== */
 .container {
-    max-width: 1200px;
+    width: 100%;
+    max-width: 1280px;
     margin: 0 auto;
     padding: 0 24px;
+    box-sizing: border-box;
 }
 
 /* ============================
@@ -126,6 +424,12 @@ h1,h2,h3,h4,h5 { font-weight: 800; letter-spacing: -.02em; line-height: 1.15; co
     border-color: var(--primary-blue) !important;
     cursor: not-allowed;
     opacity: .85;
+}
+
+.carousel-container {
+    max-width: 1200px;
+    margin: 50px auto;
+    padding: 0 24px;
 }
 
 /* Icon button (heart/cart in cards) */
@@ -575,6 +879,7 @@ h1,h2,h3,h4,h5 { font-weight: 800; letter-spacing: -.02em; line-height: 1.15; co
     color: var(--accent-blue);
     margin-bottom: 14px;
 }
+
 
 /* ============================
    WHY STRIP
@@ -1556,5 +1861,6 @@ h1,h2,h3,h4,h5 { font-weight: 800; letter-spacing: -.02em; line-height: 1.15; co
          b a c k g r o u n d - c o l o r :   # e 2 e 8 f 0   ! i m p o r t a n t ; 
          c o l o r :   v a r ( - - t e x t - m i d )   ! i m p o r t a n t ; 
          c u r s o r :   n o t - a l l o w e d ; 
- }  
+ } 
+ 
  

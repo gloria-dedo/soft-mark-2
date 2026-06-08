@@ -7,37 +7,13 @@ $featuredProducts = $db->query("SELECT * FROM products ORDER BY name ASC")->fetc
 require_once 'includes/header.php';
 ?>
 
-<section class="hero product-finder-hero" id="hero">
-    <div class="container hero-finder-inner animate-up">
-        <div class="hero-copy">
-            <h1>ERP systems for growing businesses</h1>
-            <p>Browse practical web-based modules for finance, people, stock, sales, purchasing, projects, and daily operations.</p>
-
-            <label class="hero-search" for="home-product-search">
-                <i class="fas fa-search"></i>
-                <input type="search" id="home-product-search" placeholder="Search systems..." autocomplete="off">
-            </label>
-        </div>
-
-        <div class="hero-art" aria-hidden="true">
-            <div class="hero-type-box">
-                <span>ERP</span>
-            </div>
-            <div class="hero-window hero-window-main">
-                <div class="window-dots">
-                    <span></span><span></span><span></span>
-                </div>
-                <div class="window-lines">
-                    <span></span><span></span><span></span><span></span>
-                </div>
-            </div>
-            <div class="hero-window hero-window-side"></div>
-        </div>
-    </div>
-</section>
 
 <section class="home-product-browser" id="featured">
-    <div class="container">
+     
+    <div class="container" >
+        <div style="margin-top:40px; margin-bottom:40px;">
+            <?php include 'includes/carousel.php'; ?>
+        </div>
         <div class="home-filter-bar" aria-label="Filter products by web system type">
             <button class="home-filter-chip active" type="button" data-filter="all">
                 All
