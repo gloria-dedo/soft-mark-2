@@ -23,7 +23,8 @@ $currentPage = basename($_SERVER['PHP_SELF'], '.php');
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    <link rel="stylesheet" href="/sotfMark/assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/carousel.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
 </head>
 <body>
@@ -34,7 +35,7 @@ $currentPage = basename($_SERVER['PHP_SELF'], '.php');
 
             <!-- Logo -->
             <a href="index.php" class="store-logo">
-                <img src="/sotfMark/assets/images/logoSoftMark.jpeg" alt="SoftMark Logo">
+                <img src="assets/images/logoSoftMark.jpeg" alt="SoftMark Logo">
             </a>
 
             <!-- Categories button — desktop only -->

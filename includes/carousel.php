@@ -12,8 +12,6 @@ function carouselTeaser(string $text, int $max = 100): string {
 }
 ?>
 
-<link rel="stylesheet" href="/sotfMark/assets/css/carousel.css">
-
 <div class="carousel">
 
     <?php foreach ($carouselSlides as $index => $slide): ?>
@@ -53,4 +51,4 @@ function carouselTeaser(string $text, int $max = 100): string {
 
 </div>
 
-<script src="/sotfMark/assets/js/carousel.js"></script>
+<script src="assets/js/carousel.js"></script>
