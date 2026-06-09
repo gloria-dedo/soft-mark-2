@@ -109,7 +109,7 @@ function renderStars2(float $rating): string {
         <div class="product-showcase-visual">
             <div class="product-visual-frame">
                 <img
-                    src="<?= htmlspecialchars($product['image_url']) ?>"
+                    src="<?= imgUrl($product['image_url']) ?>"
                     alt="<?= htmlspecialchars($product['name']) ?> product image"
                     class="detail-img"
                     onerror="this.onerror=null; this.src='assets/images/placeholder.jpg';"

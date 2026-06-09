@@ -1,65 +1,67 @@
 <?php
-$host = '127.0.0.1';
+$host     = '127.0.0.1';
 $username = 'root';
-$password = ''; // Default XAMPP MySQL password is empty
-$dbname = 'erp_store';
+$password = '';
+$dbname   = 'erp_store';
 
 try {
-    // Connect to MySQL server first (without specifying db) to create db if not exists
     $db = new PDO("mysql:host=$host;charset=utf8mb4", $username, $password);
     $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     $db->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
 
-    // Create database if not exists
+    // Create database
     $db->exec("CREATE DATABASE IF NOT EXISTS `$dbname` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
-    echo "Database `$dbname` checked/created successfully.\n";
+    echo "Database `$dbname` checked/created.\n";
 
-    // Now connect to the specific database
     $db->exec("USE `$dbname`");
 
-    // Create Products table
+    // Products table — name is UNIQUE so we can upsert without wiping data
     $db->exec("CREATE TABLE IF NOT EXISTS products (
-        id INT AUTO_INCREMENT PRIMARY KEY,
-        name VARCHAR(255) NOT NULL,
+        id        INT AUTO_INCREMENT PRIMARY KEY,
+        name      VARCHAR(255) NOT NULL,
         description TEXT NOT NULL,
-        price DECIMAL(10,2) NOT NULL,
-        rating DECIMAL(3,2) NOT NULL,
+        price     DECIMAL(10,2) NOT NULL,
+        rating    DECIMAL(3,2) NOT NULL,
         image_url VARCHAR(255) NOT NULL,
-        features TEXT NOT NULL
+        features  TEXT NOT NULL,
+        UNIQUE KEY uq_name (name)
     ) ENGINE=InnoDB");
-    echo "Table `products` checked/created successfully.\n";
 
-    // Create Cart table
+    // Add unique key to existing installs that don't have it yet
+    try { $db->exec("ALTER TABLE products ADD UNIQUE KEY uq_name (name)"); }
+    catch (PDOException $e) { /* already exists */ }
+
+    echo "Table `products` ready.\n";
+
+    // Cart table
     $db->exec("CREATE TABLE IF NOT EXISTS cart (
-        id INT AUTO_INCREMENT PRIMARY KEY,
+        id         INT AUTO_INCREMENT PRIMARY KEY,
         product_id INT NOT NULL,
-        quantity INT NOT NULL DEFAULT 1,
+        quantity   INT NOT NULL DEFAULT 1,
         FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
     ) ENGINE=InnoDB");
-    echo "Table `cart` checked/created successfully.\n";
+    echo "Table `cart` ready.\n";
 
-    // Create Wishlist table
+    // Wishlist table
     $db->exec("CREATE TABLE IF NOT EXISTS wishlist (
-        id INT AUTO_INCREMENT PRIMARY KEY,
+        id         INT AUTO_INCREMENT PRIMARY KEY,
         product_id INT NOT NULL,
         FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
     ) ENGINE=InnoDB");
-    echo "Table `wishlist` checked/created successfully.\n";
+    echo "Table `wishlist` ready.\n";
 
-    // Truncate products and re-seed so image updates always apply
-    $db->exec("SET FOREIGN_KEY_CHECKS=0");
-    $db->exec("TRUNCATE TABLE cart");
-    $db->exec("TRUNCATE TABLE wishlist");
-    $db->exec("TRUNCATE TABLE products");
-    $db->exec("SET FOREIGN_KEY_CHECKS=1");
-
+    // -------------------------------------------------------
+    // Product catalogue
+    // To update an image: change image_url here and re-run.
+    // Cart & wishlist data is NOT affected.
+    // -------------------------------------------------------
     $products = [
         [
             'name'        => 'Accounting System Pro',
             'description' => 'Advanced financial management with automated reporting, tax compliance, and multi-currency support for global enterprises.',
             'price'       => 499.99,
             'rating'      => 4.8,
-            'image_url'   => 'assets/images/image16.jpeg',
+            'image_url'   => 'assets/images/accountingPro.svg',
             'features'    => 'Multi-currency, Automated Tax, Advanced Reporting, API Access'
         ],
         [
@@ -67,7 +69,7 @@ try {
             'description' => 'Essential accounting tools for small to medium businesses. Manage invoices, track expenses, and view cash flow.',
             'price'       => 199.99,
             'rating'      => 4.5,
-            'image_url'   => 'assets/images/image17.jpeg',
+            'image_url'   => 'assets/images/accountingstandard.svg',
             'features'    => 'Invoicing, Expense Tracking, Bank Reconciliation'
         ],
         [
@@ -75,7 +77,7 @@ try {
             'description' => 'Track, manage, and optimize your company assets. Features barcode scanning and lifecycle management.',
             'price'       => 299.99,
             'rating'      => 4.6,
-            'image_url'   => 'assets/images/image7.jpeg',
+            'image_url'   => 'assets/images/asset.svg',
             'features'    => 'Barcode Scanning, Lifecycle Tracking, Maintenance Scheduling'
         ],
         [
@@ -99,7 +101,7 @@ try {
             'description' => 'Customer Relationship Management to boost sales, manage leads, and improve customer support interactions.',
             'price'       => 449.99,
             'rating'      => 4.8,
-            'image_url'   => 'assets/images/image11.jpeg',
+            'image_url'   => 'assets/images/crm.svg',
             'features'    => 'Lead Tracking, Email Integration, Support Ticketing'
         ],
         [
@@ -139,7 +141,7 @@ try {
             'description' => 'Transform raw data into powerful insights with real-time analytics, custom reports, and interactive dashboards.',
             'price'       => 459.99,
             'rating'      => 4.7,
-            'image_url'   => 'assets/images/image18.jpeg',
+            'image_url'   => 'assets/images/businessIntelligence.svg',
             'features'    => 'Custom Reports, KPI Tracking, Data Visualisation, Scheduled Exports'
         ],
         [
@@ -192,16 +194,27 @@ try {
         ],
     ];
 
-    $insertStmt = $db->prepare("INSERT INTO products (name, description, price, rating, image_url, features) VALUES (:name, :description, :price, :rating, :image_url, :features)");
+    // Upsert: inserts new products, updates existing ones by name.
+    // Cart and wishlist rows are untouched.
+    $upsert = $db->prepare("
+        INSERT INTO products (name, description, price, rating, image_url, features)
+        VALUES (:name, :description, :price, :rating, :image_url, :features)
+        ON DUPLICATE KEY UPDATE
+            image_url   = VALUES(image_url),
+            description = VALUES(description),
+            price       = VALUES(price),
+            rating      = VALUES(rating),
+            features    = VALUES(features)
+    ");
 
-    foreach ($products as $product) {
-        $insertStmt->execute($product);
-        echo "  + Seeded: {$product['name']}\n";
+    foreach ($products as $p) {
+        $upsert->execute($p);
+        echo "  + Synced: {$p['name']}\n";
     }
 
-    echo "\nDatabase setup and seeded successfully with " . count($products) . " products.\n";
+    echo "\nDone. " . count($products) . " products synced. Cart & wishlist preserved.\n";
 
 } catch (PDOException $e) {
-    die("Database setup failed: " . $e->getMessage() . "\n");
+    die("Setup failed: " . $e->getMessage() . "\n");
 }
 ?>

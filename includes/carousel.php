@@ -18,7 +18,7 @@ function carouselTeaser(string $text, int $max = 100): string {
 
     <?php foreach ($carouselSlides as $index => $slide): ?>
         <div class="slide <?= $index === 0 ? 'active' : '' ?>"
-             style="background-image:url('<?= htmlspecialchars($slide['image_url']) ?>')">
+             style="background-image:url('<?= imgUrl($slide['image_url']) ?>')">
 
             <div class="overlay"></div>
 

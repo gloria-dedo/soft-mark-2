@@ -24,6 +24,7 @@ $currentPage = basename($_SERVER['PHP_SELF'], '.php');
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link rel="stylesheet" href="/sotfMark/assets/css/style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
 </head>
 <body>
 
@@ -33,14 +34,14 @@ $currentPage = basename($_SERVER['PHP_SELF'], '.php');
 
             <!-- Logo -->
             <a href="index.php" class="store-logo">
-                <img src="/sotfMark/assets/images/logo.png" alt="SoftMark Logo">
+                <img src="/sotfMark/assets/images/logoSoftMark.jpeg" alt="SoftMark Logo">
             </a>
 
             <!-- Categories button — desktop only -->
             <button class="store-category-btn">
-                <i class="fas fa-th-large"></i>
+                <i class="ti ti-category"></i>
                 <span>Categories</span>
-                <i class="fas fa-chevron-down"></i>
+                <i class="ti ti-chevron-down"></i>
             </button>
 
             <!-- Search bar -->
@@ -65,12 +66,15 @@ $currentPage = basename($_SERVER['PHP_SELF'], '.php');
             <!-- Action icons + mobile controls -->
             <div class="store-actions">
                 <!-- Search icon — mobile only, opens search bar -->
-                <button class="store-icon store-search-toggle" id="store-search-toggle" aria-label="Search" title="Search">
-                    <i class="fas fa-search"></i>
-                </button>
+                <button class="store-icon store-search-toggle mobile-only"
+        id="store-search-toggle"
+        aria-label="Search"
+        title="Search">
+    <i class="fas fa-search"></i>
+</button>
 
                 <a href="wishlist.php" class="store-icon" title="Wishlist">
-                    <i class="far fa-heart"></i>
+                    <i class="far fa-heart" style="color: red;"></i>
                     <?php if ($wishlistCount > 0): ?>
                         <span class="store-badge"><?= $wishlistCount ?></span>
                     <?php endif; ?>
