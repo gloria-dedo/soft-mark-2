@@ -69,12 +69,13 @@ function renderStars2(float $rating): string {
             </div>
 
             <button
-                class="btn btn-primary product-detail-cart-btn add-to-cart <?= $isInCart ? 'btn-incart' : '' ?>"
+                type="button"
+                class="btn btn-primary product-detail-cart-btn add-to-cart"
                 data-id="<?= $product['id'] ?>"
                 <?= $isInCart ? 'disabled' : '' ?>
                 id="detail-cart-btn"
             >
-                <?= $isInCart ? '<i class="fas fa-check"></i> In Cart' : '<i class="fas fa-cart-plus"></i> Add to Cart' ?>
+                Add to Cart
             </button>
 
             <div class="product-detail-notes">

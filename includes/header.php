@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/db.php';
+require_once __DIR__ . '/categories.php';
 
 // Fetch cart and wishlist counts for display in navbar
 $cartCount = $db->query("SELECT SUM(quantity) FROM cart")->fetchColumn() ?: 0;
@@ -39,23 +40,55 @@ $currentPage = basename($_SERVER['PHP_SELF'], '.php');
             </a>
 
             <!-- Categories button — desktop only -->
-            <button class="store-category-btn">
-                <i class="ti ti-category"></i>
-                <span>Categories</span>
-                <i class="ti ti-chevron-down"></i>
-            </button>
+            <div class="store-category-wrap" id="store-category-wrap">
+                <button
+                    type="button"
+                    class="store-category-btn"
+                    id="store-category-btn"
+                    aria-expanded="false"
+                    aria-haspopup="true"
+                    aria-controls="store-category-dropdown"
+                >
+                    <i class="ti ti-category"></i>
+                    <span>Categories</span>
+                    <i class="ti ti-chevron-down store-category-chevron"></i>
+                </button>
+                <div class="store-category-dropdown" id="store-category-dropdown" hidden>
+                    <ul class="store-category-list">
+                        <?php foreach (storeCategories() as $cat): ?>
+                            <li>
+                                <a href="<?= categoryProductsUrl($cat['slug']) ?>">
+                                    <i class="ti <?= htmlspecialchars($cat['icon']) ?>"></i>
+                                    <?= htmlspecialchars($cat['label']) ?>
+                                </a>
+                            </li>
+                        <?php endforeach; ?>
+                    </ul>
+                </div>
+            </div>
 
-            <!-- Search bar -->
-            <form class="store-search" id="store-search-form" action="products.php" method="GET">
-                <input type="text" name="search" placeholder="Search products..." id="store-search-input">
-                <button type="submit" aria-label="Search">
-                    <i class="fas fa-search"></i>
-                </button>
-                <!-- Close search — mobile only -->
-                <button type="button" class="store-search-close" id="store-search-close" aria-label="Close search">
-                    <i class="fas fa-times"></i>
-                </button>
-            </form>
+            <!-- Search bar + live results -->
+            <div class="store-search-wrap" id="store-search-wrap">
+                <form class="store-search" id="store-search-form" action="products.php" method="GET" role="search">
+                    <input
+                        type="search"
+                        name="search"
+                        placeholder="Search products..."
+                        id="store-search-input"
+                        autocomplete="off"
+                        aria-autocomplete="list"
+                        aria-controls="store-search-dropdown"
+                        aria-expanded="false"
+                    >
+                    <button type="submit" aria-label="Search">
+                        <i class="fas fa-search"></i>
+                    </button>
+                    <button type="button" class="store-search-close" id="store-search-close" aria-label="Close search">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </form>
+                <div class="store-search-dropdown" id="store-search-dropdown" hidden role="region" aria-label="Search results"></div>
+            </div>
 
             <!-- Nav links — desktop only -->
             <ul class="store-nav">
@@ -74,14 +107,14 @@ $currentPage = basename($_SERVER['PHP_SELF'], '.php');
     <i class="fas fa-search"></i>
 </button>
 
-                <a href="wishlist.php" class="store-icon" title="Wishlist">
+                <a href="wishlist.php" class="store-icon" id="store-wishlist" title="Wishlist">
                     <i class="far fa-heart" style="color: red;"></i>
                     <?php if ($wishlistCount > 0): ?>
                         <span class="store-badge"><?= $wishlistCount ?></span>
                     <?php endif; ?>
                 </a>
 
-                <a href="cart.php" class="store-icon" title="Cart">
+                <a href="cart.php" class="store-icon" id="store-cart" title="Cart">
                     <i class="fas fa-shopping-bag"></i>
                     <?php if ($cartCount > 0): ?>
                         <span class="store-badge"><?= $cartCount ?></span>
@@ -100,6 +133,19 @@ $currentPage = basename($_SERVER['PHP_SELF'], '.php');
 
         <!-- Mobile nav drawer -->
         <nav class="store-mobile-nav" id="store-mobile-nav" aria-label="Mobile navigation">
+            <div class="store-mobile-nav-section">
+                <p class="store-mobile-nav-label">Categories</p>
+                <ul class="store-mobile-categories">
+                    <?php foreach (storeCategories() as $cat): ?>
+                        <li>
+                            <a href="<?= categoryProductsUrl($cat['slug']) ?>">
+                                <i class="ti <?= htmlspecialchars($cat['icon']) ?>"></i>
+                                <?= htmlspecialchars($cat['label']) ?>
+                            </a>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+            </div>
             <ul>
                 <li><a href="index.php" class="<?= $currentPage === 'index' ? 'active' : '' ?>">Home</a></li>
                 <li><a href="products.php" class="<?= $currentPage === 'products' ? 'active' : '' ?>">Products</a></li>

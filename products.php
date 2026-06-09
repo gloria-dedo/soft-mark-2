@@ -1,15 +1,17 @@
 <?php
 $pageTitle = 'All ERP Products';
 require_once 'includes/db.php';
+require_once 'includes/categories.php';
 
-$search = $_GET['search'] ?? '';
+$search = trim($_GET['search'] ?? '');
+$category = trim($_GET['category'] ?? '');
 $sort = $_GET['sort'] ?? 'name_asc';
 
 $query = "SELECT * FROM products";
 $params = [];
 
 if ($search !== '') {
-    $query .= " WHERE name LIKE :search OR description LIKE :search";
+    $query .= " WHERE name LIKE :search OR description LIKE :search OR features LIKE :search";
     $params['search'] = "%$search%";
 }
 
@@ -25,6 +27,18 @@ $stmt = $db->prepare($query);
 $stmt->execute($params);
 $allProducts = $stmt->fetchAll();
 
+if ($category !== '') {
+    $allProducts = filterProductsByCategory($allProducts, $category);
+}
+
+$activeCategoryLabel = 'All Software';
+foreach (storeCategories() as $cat) {
+    if ($cat['slug'] === $category) {
+        $activeCategoryLabel = $cat['label'];
+        break;
+    }
+}
+
 require_once 'includes/header.php';
 ?>
 
@@ -34,8 +48,10 @@ require_once 'includes/header.php';
 <section class="page-hero">
     <div class="container">
         <p class="section-eyebrow">Our Software Suite</p>
-        <h1>All ERP Products</h1>
-        <p>Explore our complete range of enterprise software modules — built for precision, integration, and scale.</p>
+        <h1><?= $category !== '' ? htmlspecialchars($activeCategoryLabel) : 'All ERP Products' ?></h1>
+        <p><?= $category !== ''
+            ? 'Browse enterprise modules in this category.'
+            : 'Explore our complete range of enterprise software modules — built for precision, integration, and scale.' ?></p>
     </div>
 </section>
 
@@ -49,6 +65,9 @@ require_once 'includes/header.php';
             <p class="products-count"><?= count($allProducts) ?> Products Available</p>
             
             <form action="products.php" method="GET" class="filter-form">
+                <?php if ($category !== ''): ?>
+                    <input type="hidden" name="category" value="<?= htmlspecialchars($category) ?>">
+                <?php endif; ?>
                 <input type="text" name="search" placeholder="Search products..." value="<?= htmlspecialchars($search) ?>" class="search-input">
                 <select name="sort" onchange="this.form.submit()" class="sort-select">
                     <option value="name_asc" <?= $sort === 'name_asc' ? 'selected' : '' ?>>Name (A-Z)</option>
