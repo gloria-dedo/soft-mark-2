@@ -50,6 +50,19 @@ try {
     ) ENGINE=InnoDB");
     echo "Table `wishlist` ready.\n";
 
+    // Product reviews
+    $db->exec("CREATE TABLE IF NOT EXISTS reviews (
+        id             INT AUTO_INCREMENT PRIMARY KEY,
+        product_id     INT NOT NULL,
+        reviewer_name  VARCHAR(100) NOT NULL,
+        rating         TINYINT NOT NULL,
+        comment        TEXT NOT NULL,
+        created_at     TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE,
+        CHECK (rating BETWEEN 1 AND 5)
+    ) ENGINE=InnoDB");
+    echo "Table `reviews` ready.\n";
+
     // -------------------------------------------------------
     // Product catalogue
     // To update an image: change image_url here and re-run.
@@ -213,6 +226,56 @@ try {
     }
 
     echo "\nDone. " . count($products) . " products synced. Cart & wishlist preserved.\n";
+
+    // Seed sample reviews (only when table is empty)
+    $reviewCount = (int) $db->query('SELECT COUNT(*) FROM reviews')->fetchColumn();
+    if ($reviewCount === 0) {
+        $sampleReviews = [
+            ['Accounting System Pro', 'Sarah Mensah', 5, 'Implementation was smooth and reporting dashboards are exactly what our finance team needed.'],
+            ['Accounting System Pro', 'James Osei', 5, 'Tax compliance features saved us hours every month. Highly recommended for growing businesses.'],
+            ['Accounting System Pro', 'Ama Boateng', 4, 'Powerful module with a short learning curve. Support team was responsive during onboarding.'],
+            ['HRIS Platform', 'Daniel Kofi', 5, 'Payroll automation works flawlessly. Employee self-service portal is a huge time saver.'],
+            ['HRIS Platform', 'Grace Adom', 5, 'Best HRIS we have used. Performance review workflows are intuitive and well structured.'],
+            ['CRM Suite', 'Michael Asante', 5, 'Lead tracking and email integration improved our sales pipeline visibility immediately.'],
+            ['CRM Suite', 'Efua Nyarko', 4, 'Solid CRM for mid-size teams. Ticketing module could use more customization options.'],
+            ['Business Intelligence', 'Kwame Appiah', 5, 'Dashboards are clean and KPI tracking is exactly what leadership asked for.'],
+        ];
+
+        $rows = $db->query('SELECT id, name FROM products')->fetchAll();
+        $nameToId = [];
+        foreach ($rows as $row) {
+            $nameToId[$row['name']] = (int) $row['id'];
+        }
+
+        $insertReview = $db->prepare(
+            'INSERT INTO reviews (product_id, reviewer_name, rating, comment)
+             VALUES (:product_id, :reviewer_name, :rating, :comment)'
+        );
+
+        foreach ($sampleReviews as [$productName, $reviewer, $rating, $comment]) {
+            if (!isset($nameToId[$productName])) {
+                continue;
+            }
+            $insertReview->execute([
+                'product_id'    => $nameToId[$productName],
+                'reviewer_name' => $reviewer,
+                'rating'        => $rating,
+                'comment'       => $comment,
+            ]);
+        }
+
+        $db->exec(
+            'UPDATE products p
+             SET rating = (
+                 SELECT ROUND(AVG(r.rating), 2)
+                 FROM reviews r
+                 WHERE r.product_id = p.id
+             )
+             WHERE EXISTS (SELECT 1 FROM reviews r WHERE r.product_id = p.id)'
+        );
+
+        echo "Sample reviews seeded.\n";
+    }
 
 } catch (PDOException $e) {
     die("Setup failed: " . $e->getMessage() . "\n");

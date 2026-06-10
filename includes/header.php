@@ -115,7 +115,7 @@ $currentPage = basename($_SERVER['PHP_SELF'], '.php');
                 </a>
 
                 <a href="cart.php" class="store-icon" id="store-cart" title="Cart">
-                    <i class="fas fa-shopping-bag"></i>
+                    <i class="fas fa-shopping-cart"></i>
                     <?php if ($cartCount > 0): ?>
                         <span class="store-badge"><?= $cartCount ?></span>
                     <?php endif; ?>

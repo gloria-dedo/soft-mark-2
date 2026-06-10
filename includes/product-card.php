@@ -91,6 +91,7 @@ if (!function_exists('renderStars')) {
                 data-id="<?= $product['id'] ?>"
                 id="cart-btn-<?= $product['id'] ?>"
             >
+                <i class="fas fa-shopping-cart"></i>
                 Add To Cart
             </button>
         </div>

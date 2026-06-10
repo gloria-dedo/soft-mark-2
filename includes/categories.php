@@ -64,3 +64,13 @@ function filterProductsByCategory(array $products, string $slug): array {
         fn($p) => productMatchesCategory($p, $slug)
     ));
 }
+
+function detectProductCategory(array $product): ?array {
+    foreach (storeCategories() as $cat) {
+        if ($cat['slug'] !== '' && productMatchesCategory($product, $cat['slug'])) {
+            return $cat;
+        }
+    }
+
+    return null;
+}
