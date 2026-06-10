@@ -93,7 +93,6 @@ $currentPage = basename($_SERVER['PHP_SELF'], '.php');
             <!-- Nav links — desktop only -->
             <ul class="store-nav">
                 <li><a href="index.php" class="<?= $currentPage === 'index' ? 'active' : '' ?>">Home</a></li>
-                <li><a href="products.php" class="<?= $currentPage === 'products' ? 'active' : '' ?>">Products</a></li>
                 <li><a href="contact.php" class="<?= $currentPage === 'contact' ? 'active' : '' ?>">Contact Us</a></li>
             </ul>
 
@@ -148,7 +147,6 @@ $currentPage = basename($_SERVER['PHP_SELF'], '.php');
             </div>
             <ul>
                 <li><a href="index.php" class="<?= $currentPage === 'index' ? 'active' : '' ?>">Home</a></li>
-                <li><a href="products.php" class="<?= $currentPage === 'products' ? 'active' : '' ?>">Products</a></li>
                 <li><a href="contact.php" class="<?= $currentPage === 'contact' ? 'active' : '' ?>">Contact Us</a></li>
             </ul>
         </nav>

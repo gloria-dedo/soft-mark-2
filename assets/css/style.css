@@ -1741,19 +1741,217 @@ h1,h2,h3,h4,h5 { font-weight: 800; letter-spacing: -.02em; line-height: 1.15; co
 /* ============================
    PRODUCTS PAGE
 ============================== */
-.products-page-section { padding-top: 48px; }
-.products-filter-bar {
+.products-page-section {
+    padding: 32px 0 56px;
+    background: var(--white);
+}
+
+.products-category-header {
+    display: grid;
+    grid-template-columns: 4px minmax(0, auto) 1fr;
+    gap: 16px;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.products-category-accent {
+    align-self: stretch;
+    width: 4px;
+    min-height: 52px;
+    background: #1e40af;
+    border-radius: 2px;
+}
+
+.products-category-text h1 {
+    margin: 0;
+    font-size: 28px;
+    font-weight: 800;
+    line-height: 1.1;
+    color: var(--text-dark);
+    letter-spacing: -.02em;
+}
+
+.products-search-query {
+    margin: 4px 0 0;
+    font-size: .92rem;
+    color: var(--text-mid);
+}
+
+.products-category-count {
+    margin: 6px 0 0;
+    font-size: .92rem;
+    color: var(--text-light);
+}
+
+.products-category-rule {
+    height: 1px;
+    background: #e8ecf1;
+    align-self: center;
+}
+
+.products-toolbar {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    flex-wrap: wrap;
     gap: 16px;
-    margin-bottom: 32px;
+    flex-wrap: wrap;
+    padding: 14px 18px;
+    margin-bottom: 28px;
+    border: 1px solid #e8ecf1;
+    border-radius: 10px;
     background: var(--white);
-    padding: 16px;
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
 }
+
+.products-range {
+    margin: 0;
+    font-size: .92rem;
+    color: var(--text-mid);
+}
+
+.products-range strong {
+    color: var(--text-dark);
+    font-weight: 700;
+}
+
+.products-sort-form {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-left: auto;
+}
+
+.products-sort-label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+.products-sort-wrap {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+}
+
+.products-sort-icon {
+    position: absolute;
+    left: 14px;
+    color: var(--text-mid);
+    font-size: 1rem;
+    pointer-events: none;
+}
+
+.products-sort-select {
+    appearance: none;
+    min-width: 190px;
+    padding: 10px 38px 10px 40px;
+    border: 1px solid #e8ecf1;
+    border-radius: 8px;
+    background: var(--white);
+    color: var(--text-dark);
+    font-family: inherit;
+    font-size: .88rem;
+    font-weight: 500;
+    cursor: pointer;
+    outline: none;
+    transition: border-color .2s ease;
+}
+
+.products-sort-select:focus {
+    border-color: var(--accent-blue);
+}
+
+.products-sort-chevron {
+    position: absolute;
+    right: 12px;
+    color: var(--text-mid);
+    font-size: .9rem;
+    pointer-events: none;
+}
+
+.products-page-grid {
+    padding-bottom: 32px;
+}
+
+.products-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    margin-top: 8px;
+}
+
+.products-page-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border: none;
+    background: transparent;
+    color: var(--text-dark);
+    text-decoration: none;
+    cursor: pointer;
+    font-size: .95rem;
+}
+
+.products-page-btn.is-disabled {
+    color: #cbd5e1;
+    cursor: default;
+}
+
+.products-page-numbers {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.products-page-number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 38px;
+    height: 38px;
+    padding: 0 6px;
+    border-radius: 50%;
+    color: var(--text-dark);
+    text-decoration: none;
+    font-size: .92rem;
+    font-weight: 600;
+    transition: background .2s ease, color .2s ease;
+}
+
+.products-page-number:hover {
+    background: #f1f5f9;
+}
+
+.products-page-number.is-active {
+    background: #1e40af;
+    color: var(--white);
+}
+
+@media (max-width: 640px) {
+    .products-toolbar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .products-sort-form {
+        width: 100%;
+        margin-left: 0;
+    }
+
+    .products-sort-wrap,
+    .products-sort-select {
+        width: 100%;
+    }
+}
+
 .filter-form {
     display: flex;
     align-items: center;

@@ -74,3 +74,20 @@ function detectProductCategory(array $product): ?array {
 
     return null;
 }
+
+function sortStoreProducts(array $products, string $sort): array {
+    usort($products, static function (array $a, array $b) use ($sort): int {
+        switch ($sort) {
+            case 'price_asc':
+                return $a['price'] <=> $b['price'];
+            case 'price_desc':
+                return $b['price'] <=> $a['price'];
+            case 'newest':
+                return $b['id'] <=> $a['id'];
+            default:
+                return strcasecmp($a['name'], $b['name']);
+        }
+    });
+
+    return $products;
+}
