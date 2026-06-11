@@ -468,6 +468,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         const isActive = document.querySelector(`.add-to-wishlist-overlay[data-id="${id}"]`)?.classList.contains('heart-active');
                         updateStoreBadge('store-wishlist', isActive ? 1 : -1);
                         showToast(isActive ? 'Added to wishlist!' : 'Removed from wishlist.');
+                        removeWishlistCardIfNeeded(id, isActive);
                     } else {
                         showToast('Could not update wishlist. Try again.', 'error');
                     }
@@ -478,9 +479,24 @@ document.addEventListener('DOMContentLoaded', () => {
                     const isActive = btn.classList.contains('heart-active');
                     updateStoreBadge('store-wishlist', isActive ? 1 : -1);
                     showToast(isActive ? 'Added to wishlist!' : 'Removed from wishlist.');
+                    removeWishlistCardIfNeeded(id, isActive);
                 });
         });
     });
+
+    function removeWishlistCardIfNeeded(productId, isActive) {
+        if (isActive) return;
+
+        const card = document.getElementById(`wishlist-card-${productId}`);
+        if (!card) return;
+
+        const grid = card.closest('.wishlist-grid');
+        card.remove();
+
+        if (grid && !grid.children.length) {
+            window.location.reload();
+        }
+    }
 
     function syncWishlistHeartIcon(btn) {
         const icon = btn.querySelector('i');

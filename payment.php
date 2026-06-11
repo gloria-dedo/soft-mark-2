@@ -31,7 +31,7 @@ require_once 'includes/header.php';
                 <i class="fas fa-check-circle" style="font-size: 4rem; color: #22c55e; margin-bottom: 20px;"></i>
                 <h2 style="font-size: 2rem; margin-bottom: 12px;">Payment Successful!</h2>
                 <p style="color: var(--text-mid); margin-bottom: 24px;">Your order has been placed successfully. Thank you for choosing SoftMark.</p>
-                <a href="index.php" class="btn btn-primary">Return to Home</a>
+                <?= renderButton(['label' => 'Return to Home', 'href' => 'index.php', 'block' => true]) ?>
             </div>
         <?php else: ?>
             <div class="contact-form-col" style="border-radius: var(--radius);">
@@ -59,9 +59,14 @@ require_once 'includes/header.php';
                             <input type="text" id="cvv" name="cvv" placeholder="123" required>
                         </div>
                     </div>
-                    <button type="submit" class="btn btn-primary btn-submit" style="margin-top: 16px;">
-                        <i class="fas fa-lock"></i> Pay $<?= htmlspecialchars($total) ?> Securely
-                    </button>
+                    <?= renderButton([
+                        'label' => 'Pay $' . htmlspecialchars($total) . ' Securely',
+                        'type' => 'submit',
+                        'icon' => 'fas fa-lock',
+                        'block' => true,
+                        'class' => 'btn-submit',
+                        'attrs' => ['style' => 'margin-top: 16px'],
+                    ]) ?>
                 </form>
             </div>
         <?php endif; ?>

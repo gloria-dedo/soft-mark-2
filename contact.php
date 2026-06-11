@@ -5,9 +5,8 @@ $success = false;
 $error = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $name = trim($_POST['name'] ?? '');
-    $email = trim($_POST['email'] ?? '');
-    $company = trim($_POST['company'] ?? '');
+    $name    = trim($_POST['name'] ?? '');
+    $email   = trim($_POST['email'] ?? '');
     $subject = trim($_POST['subject'] ?? '');
     $message = trim($_POST['message'] ?? '');
 
@@ -16,149 +15,179 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $error = 'Please enter a valid email address.';
     } else {
-        // In production, send email here. For now, just flag success.
         $success = true;
     }
 }
 
+$mapQuery = urlencode('VJW4+3VR Bsalim, Lebanon');
+$mapEmbed = "https://www.google.com/maps?q={$mapQuery}&output=embed";
+
 require_once 'includes/header.php';
 ?>
 
-<!-- Page Hero -->
-<section class="page-hero">
-    <div class="container animate-up">
-        <p class="section-eyebrow">Get In Touch</p>
-        <h1>Contact Us</h1>
-        <p>Have a question or want a free demo? Our enterprise consultants are ready to help.</p>
+<section class="contact-hero">
+    <div class="contact-hero-pattern" aria-hidden="true"></div>
+    <div class="container contact-hero-inner">
+        <span class="contact-hero-badge">
+            <i class="fas fa-envelope"></i>
+            We're here to help
+        </span>
+        <h1>Get In Touch</h1>
+        <p>Have a question, feedback, or need support? Reach out and we'll respond as soon as possible.</p>
     </div>
 </section>
 
-<!-- ============================
-     CONTACT SECTION
-============================== -->
-<section class="contact-section">
-    <div class="container contact-grid animate-up" style="animation-delay: 0.2s;">
+<nav class="contact-breadcrumb" aria-label="Breadcrumb">
+    <div class="contact-page-wrap">
+        <a href="index.php">Home</a>
+        <i class="fas fa-chevron-right" aria-hidden="true"></i>
+        <span>Contact Us</span>
+    </div>
+</nav>
 
-        <!-- Contact Info -->
-        <div class="contact-info-col">
-            <h2>Let's Start A Conversation</h2>
-            <p>Whether you're exploring ERP for the first time or looking to migrate, our team will walk you through the best solution for your organisation.</p>
+<section class="contact-page-section">
+    <div class="contact-page-wrap">
+        <div class="contact-page-layout">
+            <div class="contact-page-left">
+                <article class="contact-card contact-info-card">
+                    <header class="contact-card-header">
+                        <div class="contact-card-icon" aria-hidden="true"><i class="fas fa-phone"></i></div>
+                        <h2>Contact Information</h2>
+                    </header>
 
-            <div class="contact-details">
-                <div class="contact-detail-item">
-                    <div class="contact-icon"><i class="fas fa-map-marker-alt"></i></div>
-                    <div>
-                        <strong>Head Office</strong>
-                        <span>12 Innovation Drive, Tech Hub, Accra, Ghana</span>
-                    </div>
-                </div>
-                <div class="contact-detail-item">
-                    <div class="contact-icon"><i class="fas fa-phone"></i></div>
-                    <div>
-                        <strong>Phone</strong>
-                        <span>+1 (800) 789-0000</span>
-                    </div>
-                </div>
-                <div class="contact-detail-item">
-                    <div class="contact-icon"><i class="fas fa-envelope"></i></div>
-                    <div>
-                        <strong>Email</strong>
-                        <span>hello@softmark-erp.com</span>
-                    </div>
-                </div>
-                <div class="contact-detail-item">
-                    <div class="contact-icon"><i class="fas fa-clock"></i></div>
-                    <div>
-                        <strong>Business Hours</strong>
-                        <span>Mon – Fri: 8:00 AM – 6:00 PM GMT</span>
-                    </div>
-                </div>
+                    <ul class="contact-info-list">
+                        <li>
+                            <div class="contact-info-icon" aria-hidden="true"><i class="fas fa-phone"></i></div>
+                            <div>
+                                <strong>Phone</strong>
+                                <a href="tel:+9613552021">+9613552021</a>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="contact-info-icon" aria-hidden="true"><i class="fab fa-whatsapp"></i></div>
+                            <div>
+                                <strong>WhatsApp</strong>
+                                <a href="https://wa.link/vj2b6r" target="_blank" rel="noopener noreferrer">Chat on WhatsApp</a>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="contact-info-icon" aria-hidden="true"><i class="fas fa-location-dot"></i></div>
+                            <div>
+                                <strong>Address</strong>
+                                <span>33°53'42.8"N 35°36'25.7"E, VJW4+3VR Bsalim, Lebanon</span>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="contact-info-icon" aria-hidden="true"><i class="fas fa-clock"></i></div>
+                            <div>
+                                <strong>Business Hours</strong>
+                                <span>Mon – Sat: 8:00 AM – 6:00 PM | Holidays: 8:00 AM – 5:00 PM</span>
+                            </div>
+                        </li>
+                    </ul>
+                </article>
+
+                <article class="contact-card contact-whatsapp-card">
+                    <header class="contact-card-header">
+                        <div class="contact-card-icon" aria-hidden="true"><i class="fab fa-whatsapp"></i></div>
+                        <h2>Quick Chat</h2>
+                    </header>
+                    <?= renderButton([
+                        'label' => 'Chat with us on WhatsApp',
+                        'href' => 'https://wa.link/vj2b6r',
+                        'icon' => 'fab fa-whatsapp',
+                        'iconRight' => 'fas fa-arrow-right',
+                        'block' => true,
+                        'attrs' => ['target' => '_blank', 'rel' => 'noopener noreferrer'],
+                    ]) ?>
+                    <p class="contact-whatsapp-note">Typically replies within a few minutes</p>
+                </article>
             </div>
 
-            <div class="contact-socials">
-                <a href="#" class="social-btn" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
-                <a href="#" class="social-btn" aria-label="Twitter"><i class="fab fa-x-twitter"></i></a>
-                <a href="#" class="social-btn" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+            <div class="contact-page-right">
+                <article class="contact-card contact-form-card">
+                    <header class="contact-card-header">
+                        <div class="contact-card-icon" aria-hidden="true"><i class="fas fa-paper-plane"></i></div>
+                        <h2>Send us a Message</h2>
+                    </header>
+
+                    <?php if ($success): ?>
+                        <div class="contact-form-success">
+                            <i class="fas fa-circle-check"></i>
+                            <h3>Message Sent!</h3>
+                            <p>Thank you for reaching out. We'll get back to you as soon as possible.</p>
+                            <?= renderButton(['label' => 'Send Another Message', 'href' => 'contact.php', 'block' => true]) ?>
+                        </div>
+                    <?php else: ?>
+                        <?php if ($error): ?>
+                            <div class="contact-form-error">
+                                <i class="fas fa-circle-exclamation"></i>
+                                <?= htmlspecialchars($error) ?>
+                            </div>
+                        <?php endif; ?>
+
+                        <form method="POST" action="contact.php" class="contact-page-form" novalidate>
+                            <div class="contact-form-row">
+                                <input
+                                    type="text"
+                                    id="name"
+                                    name="name"
+                                    class="contact-field-input"
+                                    placeholder="Your Name"
+                                    value="<?= htmlspecialchars($_POST['name'] ?? '') ?>"
+                                    required
+                                >
+                                <input
+                                    type="email"
+                                    id="email"
+                                    name="email"
+                                    class="contact-field-input"
+                                    placeholder="Your Email"
+                                    value="<?= htmlspecialchars($_POST['email'] ?? '') ?>"
+                                    required
+                                >
+                            </div>
+
+                            <input
+                                type="text"
+                                id="subject"
+                                name="subject"
+                                class="contact-field-input"
+                                placeholder="Subject"
+                                value="<?= htmlspecialchars($_POST['subject'] ?? '') ?>"
+                            >
+
+                            <textarea
+                                id="message"
+                                name="message"
+                                class="contact-field-input contact-field-textarea"
+                                rows="6"
+                                placeholder="Write your message here..."
+                                required
+                            ><?= htmlspecialchars($_POST['message'] ?? '') ?></textarea>
+
+                            <?= renderButton(['label' => 'Send Message', 'type' => 'submit', 'block' => true]) ?>
+                        </form>
+                    <?php endif; ?>
+                </article>
             </div>
         </div>
 
-        <!-- Contact Form -->
-        <div class="contact-form-col">
-            <?php if ($success): ?>
-                <div class="form-success" id="form-success-msg">
-                    <i class="fas fa-circle-check"></i>
-                    <h3>Message Sent!</h3>
-                    <p>Thank you for reaching out. One of our consultants will be in touch within 24 hours.</p>
-                    <a href="contact.php" class="btn btn-primary">Send Another Message</a>
-                </div>
-            <?php else: ?>
-                <?php if ($error): ?>
-                    <div class="form-error" id="form-error-msg">
-                        <i class="fas fa-circle-exclamation"></i> <?= htmlspecialchars($error) ?>
-                    </div>
-                <?php endif; ?>
-                <form method="POST" action="contact.php" class="contact-form" id="contact-form" novalidate>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="name">Full Name <span class="req">*</span></label>
-                            <input 
-                                type="text" 
-                                id="name" 
-                                name="name" 
-                                placeholder="e.g. John Mensah"
-                                value="<?= htmlspecialchars($_POST['name'] ?? '') ?>"
-                                required
-                            >
-                        </div>
-                        <div class="form-group">
-                            <label for="email">Work Email <span class="req">*</span></label>
-                            <input 
-                                type="email" 
-                                id="email" 
-                                name="email" 
-                                placeholder="you@company.com"
-                                value="<?= htmlspecialchars($_POST['email'] ?? '') ?>"
-                                required
-                            >
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="company">Company Name</label>
-                            <input 
-                                type="text" 
-                                id="company" 
-                                name="company"
-                                placeholder="e.g. Meridian Holdings"
-                                value="<?= htmlspecialchars($_POST['company'] ?? '') ?>"
-                            >
-                        </div>
-                        <div class="form-group">
-                            <label for="subject">Subject</label>
-                            <select id="subject" name="subject">
-                                <option value="demo" <?= ($_POST['subject'] ?? '') === 'demo' ? 'selected' : '' ?>>Request a Free Demo</option>
-                                <option value="pricing" <?= ($_POST['subject'] ?? '') === 'pricing' ? 'selected' : '' ?>>Pricing Enquiry</option>
-                                <option value="support" <?= ($_POST['subject'] ?? '') === 'support' ? 'selected' : '' ?>>Technical Support</option>
-                                <option value="other" <?= ($_POST['subject'] ?? '') === 'other' ? 'selected' : '' ?>>Other</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="message">Message <span class="req">*</span></label>
-                        <textarea 
-                            id="message" 
-                            name="message" 
-                            rows="6" 
-                            placeholder="Tell us about your business needs and how we can help..."
-                            required
-                        ><?= htmlspecialchars($_POST['message'] ?? '') ?></textarea>
-                    </div>
-                    <button type="submit" class="btn btn-primary btn-submit" id="contact-submit-btn">
-                        <i class="fas fa-paper-plane"></i> &nbsp;Send Message
-                    </button>
-                </form>
-            <?php endif; ?>
-        </div>
+        <article class="contact-card contact-map-card">
+            <header class="contact-card-header">
+                <div class="contact-card-icon" aria-hidden="true"><i class="fas fa-location-dot"></i></div>
+                <h2>Find Us Here</h2>
+            </header>
+            <div class="contact-map-wrap">
+                <iframe
+                    src="<?= htmlspecialchars($mapEmbed) ?>"
+                    allowfullscreen=""
+                    loading="lazy"
+                    referrerpolicy="no-referrer-when-downgrade"
+                    title="SoftMark office location in Bsalim, Lebanon"
+                ></iframe>
+            </div>
+        </article>
     </div>
 </section>
 

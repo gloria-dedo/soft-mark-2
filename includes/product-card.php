@@ -85,15 +85,16 @@ if (!function_exists('renderStars')) {
 
         <div class="product-card-footer">
             <span class="product-card-price">$<?= number_format($product['price'], 2) ?></span>
-            <button
-                type="button"
-                class="product-card-cart add-to-cart"
-                data-id="<?= $product['id'] ?>"
-                id="cart-btn-<?= $product['id'] ?>"
-            >
-                <i class="fas fa-shopping-cart"></i>
-                Add To Cart
-            </button>
+            <?= renderButton([
+                'label' => 'Add To Cart',
+                'type' => 'button',
+                'variant' => 'primary',
+                'size' => 'sm',
+                'icon' => 'fas fa-shopping-cart',
+                'class' => 'add-to-cart',
+                'id' => 'cart-btn-' . $product['id'],
+                'attrs' => ['data-id' => $product['id']],
+            ]) ?>
         </div>
     </div>
 </article>

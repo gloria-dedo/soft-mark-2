@@ -98,16 +98,17 @@ $mainImage = imgUrl($product['image_url']);
             </div>
 
             <div class="pd-actions">
-                <button
-                    type="button"
-                    class="pd-cart-btn add-to-cart product-detail-cart-btn"
-                    data-id="<?= $product['id'] ?>"
-                    <?= $isInCart ? 'disabled' : '' ?>
-                    id="detail-cart-btn"
-                >
-                    <i class="fas fa-shopping-cart"></i>
-                    Add to Cart
-                </button>
+                <?= renderButton([
+                    'label' => 'Add to Cart',
+                    'type' => 'button',
+                    'variant' => 'primary',
+                    'size' => 'lg',
+                    'icon' => 'fas fa-shopping-cart',
+                    'class' => 'add-to-cart product-detail-cart-btn',
+                    'id' => 'detail-cart-btn',
+                    'disabled' => $isInCart,
+                    'attrs' => ['data-id' => $product['id']],
+                ]) ?>
                 <button
                     type="button"
                     class="pd-wishlist-btn add-to-wishlist-overlay<?= $isInWishlist ? ' heart-active' : '' ?>"

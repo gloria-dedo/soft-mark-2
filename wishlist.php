@@ -1,37 +1,75 @@
 <?php
-$pageTitle = 'Your Wishlist';
+$pageTitle = 'My Wishlist';
 require_once 'includes/db.php';
+require_once 'includes/categories.php';
 
-// Fetch wishlist items
-$wishlistProducts = $db->query("
-    SELECT p.*, w.id as wishlist_id
-    FROM wishlist w 
+$sort = $_GET['sort'] ?? 'newest';
+
+$wishlistProducts = $db->query('
+    SELECT p.*, w.id AS wishlist_id
+    FROM wishlist w
     JOIN products p ON w.product_id = p.id
-")->fetchAll();
+')->fetchAll();
+
+$wishlistProducts = sortStoreProducts($wishlistProducts, $sort);
+$itemCount = count($wishlistProducts);
+
+$subtitle = $itemCount === 1
+    ? '1 carefully selected item awaiting your attention'
+    : $itemCount . ' carefully selected items awaiting your attention';
 
 require_once 'includes/header.php';
 ?>
 
-<section class="page-hero">
-    <div class="container animate-up">
-        <p class="section-eyebrow">Saved For Later</p>
-        <h1>Your Wishlist</h1>
+<section class="wishlist-hero">
+    <div class="wishlist-hero-inner">
+        <div class="wishlist-hero-icon" aria-hidden="true">
+            <i class="fas fa-heart"></i>
+        </div>
+        <h1>My Wishlist</h1>
+        <p><?= $itemCount > 0 ? htmlspecialchars($subtitle) : 'Save ERP modules you want to review later' ?></p>
     </div>
 </section>
 
-<section class="wishlist-section" style="padding: 80px 0;">
-    <div class="container animate-up" style="animation-delay: 0.1s;">
+<section class="wishlist-page-section">
+    <div class="wishlist-page-wrap">
         <?php if (empty($wishlistProducts)): ?>
-            <div class="empty-state" style="text-align: center; padding: 60px 20px; background: var(--white); border: 1px solid var(--border); border-radius: var(--radius);">
-                <i class="fas fa-heart" style="font-size: 3.5rem; color: var(--border); margin-bottom: 20px;"></i>
-                <h2 style="margin-bottom: 12px;">Your wishlist is empty.</h2>
-                <p style="color: var(--text-mid); margin-bottom: 24px;">Save your favorite enterprise software modules to review later.</p>
-                <a href="products.php" class="btn btn-red">Browse Products</a>
+            <div class="wishlist-empty">
+                <i class="far fa-heart"></i>
+                <h2>Your wishlist is empty</h2>
+                <p>Save your favorite enterprise software modules to review later.</p>
+                <?= renderButton(['label' => 'Browse Products', 'href' => 'products.php', 'block' => true]) ?>
             </div>
         <?php else: ?>
-            <div class="product-grid">
+            <div class="wishlist-toolbar">
+                <div class="wishlist-toolbar-summary">
+                    <div class="wishlist-toolbar-icon" aria-hidden="true">
+                        <i class="fas fa-heart"></i>
+                    </div>
+                    <div>
+                        <strong><?= $itemCount ?> Item<?= $itemCount === 1 ? '' : 's' ?></strong>
+                        <span>Ready to purchase</span>
+                    </div>
+                </div>
+
+                <form action="wishlist.php" method="GET" class="wishlist-sort-form">
+                    <label class="products-sort-label" for="wishlist-sort">Sort by</label>
+                    <div class="products-sort-wrap">
+                        <i class="fas fa-filter products-sort-icon" aria-hidden="true"></i>
+                        <select name="sort" id="wishlist-sort" class="products-sort-select" onchange="this.form.submit()">
+                            <option value="newest" <?= $sort === 'newest' ? 'selected' : '' ?>>Newest First</option>
+                            <option value="name_asc" <?= $sort === 'name_asc' ? 'selected' : '' ?>>Name (A-Z)</option>
+                            <option value="price_asc" <?= $sort === 'price_asc' ? 'selected' : '' ?>>Price (Low to High)</option>
+                            <option value="price_desc" <?= $sort === 'price_desc' ? 'selected' : '' ?>>Price (High to Low)</option>
+                        </select>
+                        <i class="fas fa-chevron-down products-sort-chevron" aria-hidden="true"></i>
+                    </div>
+                </form>
+            </div>
+
+            <div class="wishlist-grid product-grid">
                 <?php foreach ($wishlistProducts as $product): ?>
-                    <?php include 'includes/product-card.php'; ?>
+                    <?php include 'includes/wishlist-card.php'; ?>
                 <?php endforeach; ?>
             </div>
         <?php endif; ?>

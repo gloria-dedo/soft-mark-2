@@ -1,111 +1,126 @@
 <?php
-$pageTitle = 'Your Cart';
+$pageTitle = 'Shopping Cart';
 require_once 'includes/db.php';
 
-// Fetch cart items
-$cartProducts = $db->query("
-    SELECT c.id as cart_id, c.quantity, p.* 
-    FROM cart c 
-    JOIN products p ON c.product_id = p.id
-")->fetchAll();
-
-// Handle remove item
 if (isset($_GET['remove']) && is_numeric($_GET['remove'])) {
-    $removeId = (int)$_GET['remove'];
-    $stmt = $db->prepare("DELETE FROM cart WHERE id = :id");
-    $stmt->execute(['id' => $removeId]);
+    $stmt = $db->prepare('DELETE FROM cart WHERE id = :id');
+    $stmt->execute(['id' => (int)$_GET['remove']]);
     header('Location: cart.php');
     exit;
 }
 
+if (isset($_GET['qty'], $_GET['id']) && is_numeric($_GET['id'])) {
+    $cartId = (int)$_GET['id'];
+    if ($_GET['qty'] === 'up') {
+        $db->prepare('UPDATE cart SET quantity = quantity + 1 WHERE id = ?')->execute([$cartId]);
+    } elseif ($_GET['qty'] === 'down') {
+        $stmt = $db->prepare('SELECT quantity FROM cart WHERE id = ?');
+        $stmt->execute([$cartId]);
+        $qty = (int)$stmt->fetchColumn();
+        if ($qty > 1) {
+            $db->prepare('UPDATE cart SET quantity = quantity - 1 WHERE id = ?')->execute([$cartId]);
+        } else {
+            $db->prepare('DELETE FROM cart WHERE id = ?')->execute([$cartId]);
+        }
+    }
+    header('Location: cart.php');
+    exit;
+}
+
+$cartProducts = $db->query('
+    SELECT c.id AS cart_id, c.quantity, p.*
+    FROM cart c
+    JOIN products p ON c.product_id = p.id
+')->fetchAll();
+
+$itemCount = 0;
 $totalPrice = 0;
 foreach ($cartProducts as $item) {
+    $itemCount += (int)$item['quantity'];
     $totalPrice += $item['price'] * $item['quantity'];
 }
 
 require_once 'includes/header.php';
 ?>
 
-<!-- Page Hero -->
-<section class="page-hero">
-    <div class="container animate-up">
-        <p class="section-eyebrow">Review Your Order</p>
-        <h1>Shopping Cart</h1>
-    </div>
-</section>
+<section class="cart-page">
+    <div class="cart-page-wrap">
+        <header class="cart-page-header">
+            <div class="cart-page-header-left">
+                <a href="products.php" class="cart-back-btn" aria-label="Back to products">
+                    <i class="fas fa-arrow-left"></i>
+                </a>
+                <i class="fas fa-shopping-cart cart-page-header-icon"></i>
+                <h1>Shopping Cart</h1>
+            </div>
+            <?php if ($itemCount > 0): ?>
+                <span class="cart-item-badge"><?= $itemCount ?> Item<?= $itemCount === 1 ? '' : 's' ?></span>
+            <?php endif; ?>
+        </header>
 
-<!-- Cart Section -->
-<section class="cart-section" style="padding: 80px 0;">
-    <div class="container animate-up" style="animation-delay: 0.1s;">
         <?php if (empty($cartProducts)): ?>
-            <div class="empty-state" style="text-align: center; padding: 60px 20px; background: var(--white); border: 1px solid var(--border); border-radius: var(--radius);">
-                <i class="fas fa-shopping-cart" style="font-size: 3.5rem; color: var(--border); margin-bottom: 20px;"></i>
-                <h2 style="margin-bottom: 12px;">Your cart is empty.</h2>
-                <p style="color: var(--text-mid); margin-bottom: 24px;">Explore our enterprise software modules and add them to your cart.</p>
-                <a href="products.php" class="btn btn-primary">Shop Now</a>
+            <div class="cart-empty">
+                <i class="fas fa-shopping-cart"></i>
+                <h2>Your cart is empty</h2>
+                <p>Browse our ERP modules and add them to your cart.</p>
+                <?= renderButton(['label' => 'Browse Products', 'href' => 'products.php', 'block' => true]) ?>
             </div>
         <?php else: ?>
-            <div class="contact-grid">
-                <!-- Cart Items -->
-                <div class="cart-items-col" style="background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden;">
-                    <table style="width: 100%; border-collapse: collapse;">
-                        <thead style="background: var(--bg-light); border-bottom: 1px solid var(--border); text-align: left;">
-                            <tr>
-                                <th style="padding: 16px 24px; font-size: .85rem; text-transform: uppercase; letter-spacing: .05em; color: var(--text-light);">Product</th>
-                                <th style="padding: 16px 24px; font-size: .85rem; text-transform: uppercase; letter-spacing: .05em; color: var(--text-light);">Price</th>
-                                <th style="padding: 16px 24px;"></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php foreach ($cartProducts as $item): ?>
-                                <tr style="border-bottom: 1px solid var(--border);">
-                                    <td style="padding: 24px;">
-                                        <div style="display: flex; align-items: center; gap: 16px;">
-                                            <img src="<?= htmlspecialchars($item['image_url']) ?>" alt="<?= htmlspecialchars($item['name']) ?>" style="width: 64px; height: 64px; object-fit: cover; border-radius: 4px;">
-                                            <div>
-                                                <strong style="display: block; font-size: 1.05rem; margin-bottom: 4px;"><?= htmlspecialchars($item['name']) ?></strong>
-                                                <span style="font-size: .85rem; color: var(--text-light);"><?= htmlspecialchars(substr($item['description'], 0, 60)) ?>...</span>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td style="padding: 24px; font-weight: 700; font-size: 1.1rem; color: var(--accent-blue);">
-                                        $<?= number_format($item['price'], 2) ?>
-                                    </td>
-                                    <td style="padding: 24px; text-align: right;">
-                                        <a href="cart.php?remove=<?= $item['cart_id'] ?>" class="btn-icon" style="color: var(--accent-red); border-color: transparent; background: transparent;" title="Remove Item">
-                                            <i class="fas fa-trash"></i>
-                                        </a>
-                                    </td>
-                                </tr>
-                            <?php endforeach; ?>
-                        </tbody>
-                    </table>
+            <div class="cart-page-layout">
+                <div class="cart-items-box">
+                    <?php foreach ($cartProducts as $index => $item):
+                        $lineTotal = $item['price'] * $item['quantity'];
+                        $isLast = $index === count($cartProducts) - 1;
+                    ?>
+                        <article class="cart-item-row<?= $isLast ? ' cart-item-row-last' : '' ?>">
+                            <img
+                                src="<?= htmlspecialchars($item['image_url']) ?>"
+                                alt="<?= htmlspecialchars($item['name']) ?>"
+                                class="cart-item-image"
+                                onerror="this.src='assets/images/placeholder.jpg';"
+                            >
+
+                            <div class="cart-item-info">
+                                <h3 class="cart-item-name"><?= htmlspecialchars($item['name']) ?></h3>
+                                <p class="cart-item-price">$<?= number_format($item['price'], 2) ?></p>
+                            </div>
+
+                            <div class="cart-qty-control">
+                                <a href="cart.php?id=<?= (int)$item['cart_id'] ?>&qty=down" class="cart-qty-btn" aria-label="Decrease quantity">−</a>
+                                <span class="cart-qty-value"><?= (int)$item['quantity'] ?></span>
+                                <a href="cart.php?id=<?= (int)$item['cart_id'] ?>&qty=up" class="cart-qty-btn" aria-label="Increase quantity">+</a>
+                            </div>
+
+                            <span class="cart-line-total">$<?= number_format($lineTotal, 2) ?></span>
+
+                            <a href="cart.php?remove=<?= (int)$item['cart_id'] ?>" class="cart-remove-btn" title="Remove item" aria-label="Remove item">
+                                <i class="fas fa-trash"></i>
+                            </a>
+                        </article>
+                    <?php endforeach; ?>
                 </div>
-                
-                <!-- Order Summary -->
-                <div class="cart-summary-col">
-                    <div style="background: var(--white); padding: 32px; border: 1px solid var(--border); border-radius: var(--radius);">
-                        <h2 style="margin-bottom: 24px; font-size: 1.5rem;">Order Summary</h2>
-                        <div style="display: flex; justify-content: space-between; margin-bottom: 16px; font-size: 1rem; color: var(--text-mid);">
-                            <span>Subtotal (<?= count($cartProducts) ?> items)</span>
-                            <strong>$<?= number_format($totalPrice, 2) ?></strong>
-                        </div>
-                        <div style="display: flex; justify-content: space-between; margin-bottom: 24px; font-size: 1rem; color: var(--text-mid); padding-bottom: 24px; border-bottom: 1px solid var(--border);">
-                            <span>Implementation</span>
-                            <strong>$0.00</strong>
-                        </div>
-                        <div style="display: flex; justify-content: space-between; align-items: center; font-weight: 900; font-size: 1.4rem; margin-bottom: 32px;">
-                            <span>Total</span>
-                            <span style="color: var(--accent-red);">$<?= number_format($totalPrice, 2) ?></span>
-                        </div>
-                        <a href="checkout.php" class="btn btn-primary" style="width: 100%; justify-content: center; padding: 16px; font-size: 1rem; background: var(--accent-red); border-color: var(--accent-red);">
-                            Proceed to Checkout <i class="fas fa-arrow-right"></i>
-                        </a>
-                        <p style="text-align: center; font-size: .8rem; color: var(--text-light); margin-top: 16px;">
-                            <i class="fas fa-lock"></i> Secure 256-bit SSL encryption.
-                        </p>
+
+                <aside class="cart-summary-card">
+                    <header class="cart-summary-header">
+                        <i class="fas fa-shopping-cart"></i>
+                        <h2>Order Summary</h2>
+                    </header>
+
+                    <div class="cart-summary-row">
+                        <span>Subtotal (<?= $itemCount ?> item<?= $itemCount === 1 ? '' : 's' ?>):</span>
+                        <strong id="cart-subtotal">$<?= number_format($totalPrice, 2) ?></strong>
                     </div>
-                </div>
+
+                    <div class="cart-summary-total">
+                        <span>Total:</span>
+                        <strong id="cart-total">$<?= number_format($totalPrice, 2) ?></strong>
+                    </div>
+
+                    <p class="cart-summary-note">* Licensing &amp; implementation details confirmed at checkout</p>
+
+                    <?= renderButton(['label' => 'Proceed to Checkout', 'href' => 'checkout.php', 'block' => true]) ?>
+                    <?= renderButton(['label' => 'Continue Shopping', 'href' => 'products.php', 'variant' => 'secondary', 'block' => true]) ?>
+                </aside>
             </div>
         <?php endif; ?>
     </div>

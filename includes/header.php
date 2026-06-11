@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/db.php';
 require_once __DIR__ . '/categories.php';
+require_once __DIR__ . '/button.php';
 
 // Fetch cart and wishlist counts for display in navbar
 $cartCount = $db->query("SELECT SUM(quantity) FROM cart")->fetchColumn() ?: 0;
