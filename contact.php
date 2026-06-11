@@ -64,10 +64,10 @@ require_once 'includes/header.php';
                             </div>
                         </li>
                         <li>
-                            <div class="contact-info-icon" aria-hidden="true"><i class="fab fa-whatsapp"></i></div>
+                            <div class="contact-info-icon" aria-hidden="true"><i class="fas fa-envelope"></i></div>
                             <div>
-                                <strong>WhatsApp</strong>
-                                <a href="https://wa.link/vj2b6r" target="_blank" rel="noopener noreferrer">Chat on WhatsApp</a>
+                                <strong>Email</strong>
+                                <a href="mailto:tony@compusoft.com.ng">tony@compusoft.com.ng</a>
                             </div>
                         </li>
                         <li>
@@ -191,4 +191,3 @@ require_once 'includes/header.php';
     </div>
 </section>
 
-<?php require_once 'includes/footer.php'; ?>
