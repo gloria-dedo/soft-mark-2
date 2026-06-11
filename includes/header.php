@@ -39,6 +39,8 @@ $currentPage = basename($_SERVER['PHP_SELF'], '.php');
                 <img src="assets/images/logoSoftMark.jpeg" alt="SoftMark Logo">
             </a>
 
+            <!-- Desktop middle: categories, search, nav -->
+            <div class="store-header-middle">
             <!-- Categories button — desktop only -->
             <div class="store-category-wrap" id="store-category-wrap">
                 <button
@@ -95,25 +97,26 @@ $currentPage = basename($_SERVER['PHP_SELF'], '.php');
                 <li><a href="index.php" class="<?= $currentPage === 'index' ? 'active' : '' ?>">Home</a></li>
                 <li><a href="contact.php" class="<?= $currentPage === 'contact' ? 'active' : '' ?>">Contact Us</a></li>
             </ul>
+            </div>
 
             <!-- Action icons + mobile controls -->
             <div class="store-actions">
                 <!-- Search icon — mobile only, opens search bar -->
                 <button class="store-icon store-search-toggle mobile-only"
-        id="store-search-toggle"
-        aria-label="Search"
-        title="Search">
-    <i class="fas fa-search"></i>
-</button>
+                    id="store-search-toggle"
+                    aria-label="Search"
+                    title="Search">
+                    <i class="fas fa-search"></i>
+                </button>
 
-                <a href="wishlist.php" class="store-icon" id="store-wishlist" title="Wishlist">
+                <a href="wishlist.php" class="store-icon mobile-nav-icon" id="store-wishlist" title="Wishlist">
                     <i class="far fa-heart" style="color: red;"></i>
                     <?php if ($wishlistCount > 0): ?>
                         <span class="store-badge"><?= $wishlistCount ?></span>
                     <?php endif; ?>
                 </a>
 
-                <a href="cart.php" class="store-icon" id="store-cart" title="Cart">
+                <a href="cart.php" class="store-icon mobile-nav-icon" id="store-cart" title="Cart">
                     <i class="fas fa-shopping-cart"></i>
                     <?php if ($cartCount > 0): ?>
                         <span class="store-badge"><?= $cartCount ?></span>
@@ -121,7 +124,7 @@ $currentPage = basename($_SERVER['PHP_SELF'], '.php');
                 </a>
 
                 <!-- Hamburger — mobile only -->
-                <button class="store-hamburger" id="store-hamburger" aria-label="Toggle menu">
+                <button class="store-hamburger mobile-only" id="store-hamburger" aria-label="Open menu" aria-expanded="false" aria-controls="store-mobile-nav">
                     <span></span>
                     <span></span>
                     <span></span>
@@ -130,25 +133,95 @@ $currentPage = basename($_SERVER['PHP_SELF'], '.php');
 
         </div>
 
-        <!-- Mobile nav drawer -->
-        <nav class="store-mobile-nav" id="store-mobile-nav" aria-label="Mobile navigation">
-            <div class="store-mobile-nav-section">
-                <p class="store-mobile-nav-label">Categories</p>
-                <ul class="store-mobile-categories">
+        <!-- Mobile drawer -->
+        <nav class="store-mobile-drawer" id="store-mobile-nav" aria-label="Mobile navigation" aria-hidden="true">
+            <div class="store-mobile-drawer-header">
+                <a href="index.php" class="store-mobile-drawer-logo">
+                    <img src="assets/images/logoSoftMark.jpeg" alt="SoftMark Logo">
+                </a>
+                <button type="button" class="store-mobile-drawer-close" id="store-mobile-nav-close" aria-label="Close menu">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <div class="store-mobile-tabs" role="tablist" aria-label="Mobile menu sections">
+                <button
+                    type="button"
+                    class="store-mobile-tab is-active"
+                    id="store-mobile-tab-categories"
+                    role="tab"
+                    aria-selected="true"
+                    aria-controls="store-mobile-panel-categories"
+                    data-mobile-tab="categories"
+                >
+                    Categories
+                </button>
+                <button
+                    type="button"
+                    class="store-mobile-tab"
+                    id="store-mobile-tab-menu"
+                    role="tab"
+                    aria-selected="false"
+                    aria-controls="store-mobile-panel-menu"
+                    data-mobile-tab="menu"
+                >
+                    Menu
+                </button>
+            </div>
+
+            <div
+                class="store-mobile-panel is-active"
+                id="store-mobile-panel-categories"
+                role="tabpanel"
+                aria-labelledby="store-mobile-tab-categories"
+                data-mobile-panel="categories"
+            >
+                <p class="store-mobile-panel-label">Shop by category</p>
+                <ul class="store-mobile-category-list">
                     <?php foreach (storeCategories() as $cat): ?>
                         <li>
-                            <a href="<?= categoryProductsUrl($cat['slug']) ?>">
-                                <i class="ti <?= htmlspecialchars($cat['icon']) ?>"></i>
-                                <?= htmlspecialchars($cat['label']) ?>
+                            <a href="<?= categoryProductsUrl($cat['slug']) ?>" class="store-mobile-category-link">
+                                <span class="store-mobile-cat-icon" aria-hidden="true">
+                                    <i class="ti ti-tag"></i>
+                                </span>
+                                <span class="store-mobile-cat-name"><?= htmlspecialchars($cat['label']) ?></span>
+                                <i class="ti ti-chevron-right store-mobile-cat-arrow" aria-hidden="true"></i>
                             </a>
                         </li>
                     <?php endforeach; ?>
                 </ul>
             </div>
-            <ul>
-                <li><a href="index.php" class="<?= $currentPage === 'index' ? 'active' : '' ?>">Home</a></li>
-                <li><a href="contact.php" class="<?= $currentPage === 'contact' ? 'active' : '' ?>">Contact Us</a></li>
-            </ul>
+
+            <div
+                class="store-mobile-panel"
+                id="store-mobile-panel-menu"
+                role="tabpanel"
+                aria-labelledby="store-mobile-tab-menu"
+                data-mobile-panel="menu"
+                hidden
+            >
+                <p class="store-mobile-panel-label">Quick links</p>
+                <ul class="store-mobile-menu-list">
+                    <li>
+                        <a href="index.php" class="store-mobile-menu-link <?= $currentPage === 'index' ? 'active' : '' ?>">
+                            <span class="store-mobile-cat-icon" aria-hidden="true">
+                                <i class="ti ti-home"></i>
+                            </span>
+                            <span class="store-mobile-cat-name">Home</span>
+                            <i class="ti ti-chevron-right store-mobile-cat-arrow" aria-hidden="true"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="contact.php" class="store-mobile-menu-link <?= $currentPage === 'contact' ? 'active' : '' ?>">
+                            <span class="store-mobile-cat-icon" aria-hidden="true">
+                                <i class="ti ti-mail"></i>
+                            </span>
+                            <span class="store-mobile-cat-name">Contact Us</span>
+                            <i class="ti ti-chevron-right store-mobile-cat-arrow" aria-hidden="true"></i>
+                        </a>
+                    </li>
+                </ul>
+            </div>
         </nav>
 
     </header>
